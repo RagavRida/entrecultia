@@ -29,7 +29,7 @@ A Jupyter Notebook clone where AI has direct access to the runtime state, enabli
 │                     Backend (FastAPI)                        │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
 │  │    main.py  │  │   kernel_   │  │     ai_bridge.py    │  │
-│  │   (Server)  │  │  manager.py │  │   (Gemini LLM)      │  │
+│  │   (Server)  │  │  manager.py │  │   (OpenAI LLM)      │  │
 │  └─────────────┘  └─────────────┘  └─────────────────────┘  │
 │                          │                                   │
 │                   jupyter_client                             │
@@ -55,7 +55,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
 # Set API key
-export GOOGLE_API_KEY="your-api-key"
+export OPENAI_API_KEY="your-api-key"
 
 # Start server
 uvicorn main:app --reload --port 8000
@@ -107,7 +107,7 @@ Navigate to **http://localhost:5173**
 ## Tech Stack
 
 - **Frontend**: React, Vite, TypeScript, Tailwind CSS, Monaco Editor
-- **Backend**: FastAPI, jupyter_client, langchain-google-genai
+- **Backend**: FastAPI, jupyter_client, openai
 - **Runtime**: IPython Kernel
 
 ## License
