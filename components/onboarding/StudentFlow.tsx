@@ -405,11 +405,11 @@ export function StudentFlow() {
                                                 <input
                                                     type="text"
                                                     value={otpInput}
-                                                    onChange={e => setOtpInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                                                    placeholder="Enter 6-digit OTP"
+                                                    onChange={e => setOtpInput(e.target.value.replace(/\D/g, '').slice(0, 8))}
+                                                    placeholder="Enter 8-digit OTP"
                                                     className="flex-1 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-lg px-4 py-3 text-[var(--brand-light)] focus:border-[var(--brand-accent)] focus:outline-none tracking-[0.2em] font-mono text-center"
                                                 />
-                                                <Button variant="primary" onClick={handleVerifyOtp} disabled={otpInput.length < 6 || isVerifyingOtp} className="h-[48px] whitespace-nowrap">
+                                                <Button variant="primary" onClick={handleVerifyOtp} disabled={otpInput.length < 8 || isVerifyingOtp} className="h-[48px] whitespace-nowrap">
                                                     {isVerifyingOtp ? "Verifying..." : "Verify OTP"}
                                                 </Button>
                                             </div>
