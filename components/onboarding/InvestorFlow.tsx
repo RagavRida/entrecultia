@@ -81,6 +81,7 @@ export function InvestorFlow() {
     const [otpInput, setOtpInput] = useState("");
     const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
     const [otpError, setOtpError] = useState("");
+    const [otpRateLimited, setOtpRateLimited] = useState(false);
 
     const [data, setData] = useState<InvestorData>({
         name: "", age: "", city: "", email: "", phone: "", occupation: "", source: "", idFileUrl: "", otpVerified: false,
@@ -125,7 +126,13 @@ export function InvestorFlow() {
             if (error) throw error;
             setOtpSent(true);
         } catch (error: any) {
-            setOtpError(error.message || "Failed to send OTP");
+            const msg = error.message || "Failed to send OTP";
+            if (msg.toLowerCase().includes("rate") || msg.toLowerCase().includes("limit") || msg.toLowerCase().includes("exceeded") || msg.toLowerCase().includes("too many")) {
+                setOtpRateLimited(true);
+                setOtpError("");
+            } else {
+                setOtpError(msg);
+            }
         } finally {
             setIsVerifyingOtp(false);
         }
@@ -145,7 +152,13 @@ export function InvestorFlow() {
             handleInput("otpVerified", true);
             setOtpSent(false); // hide OTP input
         } catch (error: any) {
-            setOtpError(error.message || "Invalid OTP");
+            const msg = error.message || "Invalid OTP";
+            if (msg.toLowerCase().includes("rate") || msg.toLowerCase().includes("limit") || msg.toLowerCase().includes("exceeded") || msg.toLowerCase().includes("too many")) {
+                setOtpRateLimited(true);
+                setOtpError("");
+            } else {
+                setOtpError(msg);
+            }
         } finally {
             setIsVerifyingOtp(false);
         }
@@ -190,7 +203,7 @@ export function InvestorFlow() {
     const isEmailValid = data.email && data.email.includes("@");
 
     const isStep1Valid = () => {
-        return data.name && isAgeValid && data.city && isEmailValid && data.phone && data.phone.length === 10 && data.occupation && data.source && data.idFileUrl && data.otpVerified;
+        return data.name && isAgeValid && data.city && isEmailValid && data.phone && data.phone.length === 10 && data.occupation && data.source && data.idFileUrl && (data.otpVerified || otpRateLimited);
     };
 
     const isStep2Valid = () => {
@@ -333,6 +346,15 @@ export function InvestorFlow() {
                                         </motion.div>
                                     )}
                                     {otpError && <p className="text-xs text-red-500 mt-1">{otpError}</p>}
+                                    {otpRateLimited && (
+                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 flex flex-col gap-2">
+                                            <p className="text-sm text-yellow-400 font-medium">⚠️ OTP limit exceeded</p>
+                                            <p className="text-xs text-[var(--brand-muted)]">Too many verification attempts. You can try verifying your email later — for now, continue filling the form.</p>
+                                            <Button variant="secondary" onClick={() => { }} className="self-start mt-1 text-xs h-8 px-3 bg-yellow-500/10 border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/20" disabled>
+                                                ✓ Continuing without OTP
+                                            </Button>
+                                        </motion.div>
+                                    )}
                                 </div>
                             </div>
 
